@@ -25,7 +25,7 @@ function HomePage() {
     );
 }
 
-export default HomePage
+
 
 /*function Menu (){
     return (
@@ -99,3 +99,4 @@ function TimeLine (props){
         </StyledTimeline>
     )
 }
+export default HomePage
