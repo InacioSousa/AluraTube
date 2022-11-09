@@ -1,55 +1,53 @@
-
 import React from "react";
 import config from "../config.json";
 import styled from "styled-components";
 import { CSSReset } from "../src/components/CSSReset";
-import Menu from "../src/components/Menu/components/index.js";
+import Menu from "../src/components/Menu/components";
 import { StyledTimeline } from "../src/components/Timeline";
 
-
 function HomePage() {
-    const  estiloHomePage = {
-        //backgroundColor: "red"
-        
+    const estilosDaHomePage = {
+        // backgroundColor: "red" 
     };
     const [valorDoFiltro, setValorDoFiltro] = React.useState("");
-    //const valorDoFiltro = "Angular";
-    //console.log(config.playlists);
+
     return (
-     <>
-     <CSSReset />
-    <div style={{
-        display: "flex",
-        flexDirection: "column",
-        flex: 1,
-    }}>
-    <Menu valorDoFiltro={valorDoFiltro} setValorDoFiltro={setValorDoFiltro}/>
-    <Header />
-    <TimeLine searchValue={valorDoFiltro}playlists={config.playlists}/>
-    </div>
-    </>
+        <>
+            <CSSReset />
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                flex: 1,
+                // backgroundColor: "red",
+            }}>
+                {/* Prop Drilling */}
+                <Menu valorDoFiltro={valorDoFiltro} setValorDoFiltro={setValorDoFiltro} />
+                <Header />
+                <Timeline searchValue={valorDoFiltro} playlists={config.playlists}>
+                    Conteúdo
+                </Timeline>
+            </div>
+        </>
     );
 }
+export default HomePage
+// function Menu() {
+//     return (
+//         <div>
+//             Menu
+//         </div>
+//     )
+// }
 
 
-
-/*function Menu (){
-    return (
-        <div>
-            Menu
-        </div>
-    )
-}*/
-
-
-const StyledHeader= styled.div`
+const StyledHeader = styled.div`
+    background-color: ${({ theme }) => theme.backgroundLevel1};
     img {
         width: 80px;
         height: 80px;
-        border-radius: 50%; 
+        border-radius: 50%;
     }
-    .user-info{
-        
+    .user-info {
         display: flex;
         align-items: center;
         width: 100%;
@@ -57,64 +55,65 @@ const StyledHeader= styled.div`
         gap: 16px;
     }
 `;
-const StyledBanner= styled.div`
-background-color: blue;
-background-image: url(${config.bg});
-height: 230px;
-
-
-
+const StyledBanner = styled.div`
+    background-color: blue;
+    background-image: url(${({ bg }) => bg});
+    /* background-image: url(${config.bg}); */
+    height: 230px;
 `;
-
-function Header (){
+function Header() {
     return (
         <StyledHeader>
-         <StyledBanner />
-         <section className="user-info">
-            <img src={`https://github.com/${config.github}.png`} />
-            <div>
-                <h2>
-                {config.nome}
-                </h2>
-                <p>
-                {config.cargo}
-                </p>
-            </div>
-            </section>    
-            </StyledHeader>
+            <StyledBanner bg={config.bg} />
+            <section className="user-info">
+                <img src={`https://github.com/${config.github}.png`} />
+                <div>
+                    <h2>
+                        {config.nome}
+                    </h2>
+                    <p>
+                        {config.cargo}
+                    </p>
+                </div>
+            </section>
+        </StyledHeader>
     )
 }
-function TimeLine ({searchValue, ...props}){
-    //console.log("dentro do componente", props.playlists);
-    const playlistsNames = Object.keys(props.playlists);
+function Timeline({ searchValue, ...propriedades }) {
+    // console.log("Dentro do componente", propriedades.playlists);
+    const playlistNames = Object.keys(propriedades.playlists);
+    // Statement
+    // Retorno por expressão
     return (
-
         <StyledTimeline>
-            {playlistsNames.map((playlistsName) =>{
-                const videos = props.playlists[playlistsName];
+            {playlistNames.map((playlistName) => {
+                const videos = propriedades.playlists[playlistName];
+                // console.log(playlistName);
+                // console.log(videos);
                 return (
-                <section key={playlistsName}>
-                    <h2>{playlistsName}</h2>
-                    <div>
-                    {videos.filter((video) =>{
-                        const titleNormalized = video.title.toLowerCase();
-                        const searchValueNormalized = searchValue.toLowerCase();
-                        return titleNormalized.includes(searchValueNormalized)
-                    }).map((video) => {
-                    return(
-                        <a key={video.url} href={video.url}>
-                        <img src={video.thumb} />
-                        <span>
-                            {video.title}
-                        </span>
-                        </a>
-                )
-                })}
-                    </div>
-                </section>
+                    <section key={playlistName}>
+                        <h2>{playlistName}</h2>
+                        <div>
+                            {videos
+                                .filter((video) => {
+                                    const titleNormalized = video.title.toLowerCase();
+                                    const searchValueNormalized = searchValue.toLowerCase();
+                                    return titleNormalized.includes(searchValueNormalized)
+                                })
+                                .map((video) => {
+                                    return (
+                                        <a key={video.url} href={video.url}>
+                                            <img src={video.thumb} />
+                                            <span>
+                                                {video.title}
+                                            </span>
+                                        </a>
+                                    )
+                                })}
+                        </div>
+                    </section>
                 )
             })}
         </StyledTimeline>
     )
 }
-export default HomePage
